@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.george.mapper.AccountMapper">
+    <!--<select id="selectAccount" resultType="Account">
+        select id, account_name as accountName, balance
+        from tb_account
+        where id = #{id}
+    </select>-->
+
+    <!--结果映射,将数据库中表的字段名与Java实体类的属性名进行映射-->
+    <resultMap id="accountResultMap" type="com.george.po.Account">
+        <!--id标签对数据库表中的主键进行映射,可以提高Mybatis查询效率-->
+        <id property="id" column="id" javaType="int" jdbcType="INTEGER"/>
+        <!--property:实体类属性名,column:数据库表字段名-->
+        <result property="accountName" column="account_name" javaType="String" jdbcType="VARCHAR"/>
+        <result property="balance" column="balance" javaType="double" jdbcType="DOUBLE"/>
+    </resultMap>
+
+    <select id="selectAccount" resultMap="accountResultMap">
+        select *
+        from tb_account
+        where id = #{id}
+    </select>
+
+
+    <select id="selectAllAccount" resultMap="accountResultMap">
+        select *
+        from tb_account
+    </select>
+
+
+    <update id="updateAccount">
+        update tb_account
+        set balance=#{balance}
+        where id = #{id}
+    </update>
+
+    <insert id="insertAccount">
+        insert into tb_account(id, account_name, balance)
+        values (#{id}, #{accountName}, #{balance})
+    </insert>
+
+    <delete id="deleteAccount">
+        delete
+        from tb_account
+        where id = #{id}
+    </delete>
+</mapper>

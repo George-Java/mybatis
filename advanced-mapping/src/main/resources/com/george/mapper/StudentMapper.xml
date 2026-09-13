@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.george.mapper.StudentMapper">
+    <resultMap id="StudentMap" type="com.george.po.Student">
+        <id property="sid" column="sid" jdbcType="INTEGER" javaType="int"/>
+        <result property="sname" column="sname"/>
+        <association property="classroom" javaType="com.george.po.Classroom">
+            <id property="cid" column="cid"/>
+            <result property="cname" column="cname"/>
+        </association>
+    </resultMap>
+
+
+    <select id="selectBySid" resultMap="StudentMap">
+        select sid, sname, cid, cname
+        from tb_student
+        left outer join tb_class
+        using(cid)
+        <where>
+            sid=#{sid}
+        </where>
+    </select>
+
+    <select id="selectByCid" resultMap="StudentMap">
+        select cid,cname,sname from tb_class
+        left outer join tb_student
+        using(cid)
+        <where>
+            tb_class.cid=#{cid}
+        </where>
+    </select>
+
+
+    <resultMap id="StudentMap2" type="com.george.po.Student">
+        <id property="sid" column="sid" jdbcType="INTEGER" javaType="int"/>
+        <result property="sname" column="sname"/>
+        <!--property:要映射的Java实体类(Student)属性,select:映射数据源,column(特殊):为select属性传递的参数-->
+        <!--延迟加载:即用到的时候再执行,例如select="com.george.mapper.ClassMapper.selectByCid"这条sql语句的查询结果若用不上,则不执行这条sql语句,延迟加载可以提高性能-->
+        <!--mybatis中,延迟加载特性默认关闭,通过association标签中的fetchType="lazy"开启-->
+        <association property="classroom"
+                     select="com.george.mapper.ClassMapper.selectByCid"
+                     column="cid"/>
+    </resultMap>
+
+    <select id="selectStepByStep" resultMap="StudentMap2">
+        select sid, sname, cid
+        from tb_student
+        where sid = #{sid}
+    </select>
+</mapper>

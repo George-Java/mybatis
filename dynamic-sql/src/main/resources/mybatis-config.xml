@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <properties resource="databases/mybatis.properties"/>
+    <!--<properties resource="databases/library.properties"/>-->
+
+    <settings>
+        <setting name="logImpl" value="SLF4J"/>
+        <!--启用自动结果映射,例如将数据库表中的字段account_name映射为实体类Account的属性名accountName-->
+        <!--此映射方式十分严格,要求数据库表字段必须全部小写,单词与单词间下划线分隔,实体Java类的对应属性名必须满足驼峰命名规范-->
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+    </settings>
+
+    <!--使用typeAliases给com.george.po包下的的所有类的全限定类名起别名，例如com.george.entity.Account的默认别名为Account-->
+    <typeAliases>
+        <!--<typeAlias type="com.george.po.Account"/>-->
+        <package name="com.george.po"/>
+    </typeAliases>
+
+    <environments default="mybatisDB">
+
+        <environment id="mybatisDB">
+            <!--事务管理器type的值只能是JDBC或者MANAGED
+                JDBC表示Mybatis自己管理事务，采用原生JDBC
+                MANAGED表示将事务管理交给第三方容器-->
+            <transactionManager type="JDBC"/>
+
+            <!--为程序提供Connection对象的，都可称为数据源-->
+            <!--type的值有三个：UNPOOLED,POOLED,JNDI
+                UNPOOLED:不使用连接池
+                POOLED:使用Mybatis自己的连接池
+                JNDI:使用第三方数据库连接池-->
+            <dataSource type="POOLED">
+                <property name="driver" value="${mybatis.driver}"/>
+                <property name="url" value="${mybatis.url}"/>
+                <property name="username" value="${mybatis.username}"/>
+                <property name="password" value="${mybatis.password}"/>
+            </dataSource>
+
+        </environment>
+        <!--<environment id="libraryDB">-->
+        <!--    <transactionManager type="MANAGED"/>-->
+        <!--    <dataSource type="POOLED">-->
+        <!--        <property name="driver" value="${library.driver}"/>-->
+        <!--        <property name="url" value="library.url"/>-->
+        <!--        <property name="username" value="${library.username}"/>-->
+        <!--        <property name="password" value="${library.password}"/>-->
+        <!--    </dataSource>-->
+        <!--</environment>-->
+    </environments>
+
+    <mappers>
+        <!--<mapper class="com.george.mapper.AccountMapper"/>-->
+        <package name="com.george.mapper"/>
+    </mappers>
+
+</configuration>

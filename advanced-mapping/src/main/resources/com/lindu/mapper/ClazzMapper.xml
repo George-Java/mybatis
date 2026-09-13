@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lindu.mapper.ClazzMapper">
+    <resultMap id="ClazzResultMap" type="com.lindu.po.Clazz">
+        <id property="cid" column="cid"/>
+        <result property="cname" column="cname"/>
+        <collection property="students" ofType="com.lindu.po.Student">
+            <id property="sid" column="sid"/>
+            <result property="sname" column="sname"/>
+            <result property="cid" column="cid"/>
+        </collection>
+    </resultMap>
+
+    <select id="selectByCid" resultMap="ClazzResultMap">
+        select tb_class.cid,cname,sid,sname from tb_class left join tb_student using(cid)
+        <where>
+            tb_class.cid=#{cid}
+        </where>
+    </select>
+
+
+
+
+    <resultMap id="clazzResultMap2" type="com.lindu.po.Clazz">
+        <id property="cid" column="cid"/>
+        <result property="cname" column="cname"/>
+        <collection property="students"
+                    select="com.lindu.mapper.StudentMapper.selectByCid"
+                    column="cid"/>
+    </resultMap>
+
+    <select id="selectStepByStep" resultMap="clazzResultMap2">
+        select cid,cname from tb_class
+        <where>
+            cid=#{cid}
+        </where>
+    </select>
+</mapper>

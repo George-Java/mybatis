@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: mybatis-plus
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/mp?rewriteBatchedStatements=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 123456
+    hikari:
+      maximum-pool-size: 8
+      minimum-idle: 1
+      connection-timeout: 10000
+      idle-timeout: 10000
+
+mybatis-plus:
+  type-aliases-package: com.george.mybatisplus.domain.entity
+  mapper-locations: "classpath:/com/george/mybatisplus/mapper/*.xml"
+  configuration:
+    map-underscore-to-camel-case: true
+    lazy-loading-enabled: true
+    cache-enabled: false
+  global-config:
+    db-config:
+      id-type: auto
+      update-strategy: not_null
+
+logging:
+  level:
+    com.george.mybatisplus: info

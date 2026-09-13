@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>添加用户</title>
+    <style>
+        .information {
+            width: 240px;
+            height: 50px;
+            border-radius: 5px;
+            border: 1px solid #000;
+        }
+    </style>
+</head>
+<body>
+<form id="userForm" onsubmit="return false;">
+    <label>
+        id:<input type="text" name="id" class="information"/><br>
+    </label>
+    <label>
+        用户名:<input type="text" name="username" class="information"/><br>
+    </label>
+    <label>
+        密码:<input type="password" name="password" class="information"/><br>
+    </label>
+    <label>
+        手机号:<input type="text" name="phone" class="information"/><br>
+    </label>
+    <label>
+        详细信息:<input type="text" name="info" class="information" placeholder="json风格"/><br>
+    </label>
+    <label>
+        账户余额:<input type="text" name="balance" class="information"/><br>
+    </label>
+    <button type="button" onclick="submitForm()">提交</button>
+</form>
+
+<script>
+    function submitForm() {
+        const form = document.getElementById('userForm');
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData.entries());
+
+        fetch('/users/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => response.text())
+            .then(result => {
+                alert('提交成功: ' + result);
+                form.reset();
+            })
+            .catch(error => {
+                alert('提交失败: ' + error);
+            });
+    }
+</script>
+</body>
+</html>

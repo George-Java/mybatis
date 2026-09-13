@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.george.mapper.CarMapper">
+    <!--根据id批量查询-->
+    <select id="selectById" resultType="com.george.po.Car">
+        select *from tb_car where id in
+        (
+        <foreach collection="ids" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </select>
+
+    <!--根据brand批量查询-->
+    <select id="selectByBrand" resultType="com.george.po.Car">
+        select *from tb_car where
+        <foreach collection="brands" item="brand" separator="or">
+            brand=#{brand}
+        </foreach>
+    </select>
+
+    <select id="selectByWhere" resultType="com.george.po.Car">
+        select *from tb_car
+        <where>
+            <if test="price>=0">
+                price>=#{price}
+            </if>
+            <if test="carType!=null and carType!=''">
+                and car_type=#{carType}
+            </if>
+        </where>
+    </select>
+
+    <!--批量插入-->
+    <insert id="insertCar">
+        insert into tb_car(id,brand,price,produce_time,car_type) values
+        <foreach collection="cars" item="car" separator=",">
+            (#{car.id},#{car.brand},#{car.price},#{car.produceTime},#{car.carType})
+        </foreach>
+    </insert>
+
+    <!--选择性更新-->
+    <update id="updateCar">
+        <!--update tb_car
+        <set>
+            <if test="brand!=null and brand!=''">
+                brand=#{brand},
+            </if>
+            <if test="price>=0">
+                price=#{price},
+            </if>
+            <if test="produceTime!=null">
+                produce_time=#{produceTime},
+            </if>
+            <if test="carType!=null and carType!=''">
+                car_type=#{carType}
+            </if>
+        </set>
+        where id=#{id}-->
+
+        update tb_car
+        <trim prefix="set" suffixOverrides=",">
+            <if test="brand!=null and brand!=''">
+                brand=#{brand},
+            </if>
+            <if test="price>=0">
+                price=#{price},
+            </if>
+            <if test="produceTime!=null">
+                produce_time=#{produceTime},
+            </if>
+            <if test="carType!=null and carType!=''">
+                car_type=#{carType}
+            </if>
+        </trim>
+        where id=#{id}
+    </update>
+
+    <!--批量删除-->
+    <delete id="deleteById">
+        delete from tb_car where id in
+        (
+        <foreach collection="ids" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </delete>
+
+    <select id="selectByChoose" resultType="com.george.po.Car">
+        select *from tb_car
+        <where>
+            <choose>
+                <when test="brand!=null and brand!=''">
+                    brand=#{brand}
+                </when>
+                <when test="carType!=null and carType!=''">
+                    car_type=#{carType}
+                </when>
+                <otherwise>
+                    price>=#{price} order by price
+                </otherwise>
+            </choose>
+        </where>
+    </select>
+</mapper>
